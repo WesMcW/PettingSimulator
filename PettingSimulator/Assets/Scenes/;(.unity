@@ -408,12 +408,12 @@ PrefabInstance:
     - target: {fileID: 927487297931985495, guid: f3ce02b488d4c484c99c914ebea9fc2c,
         type: 3}
       propertyPath: m_IsKinematic
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 927487297931985495, guid: f3ce02b488d4c484c99c914ebea9fc2c,
         type: 3}
       propertyPath: m_UseGravity
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1626990552072155839, guid: f3ce02b488d4c484c99c914ebea9fc2c,
         type: 3}
