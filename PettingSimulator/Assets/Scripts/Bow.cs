@@ -7,13 +7,15 @@ public class Bow : MonoBehaviour
 {
     [Header("Assets")]
     public GameObject arrowPref;
-    public Text debug;
+    public Text debug, debug2, debug3;
+    public GameObject bowString;
 
     [Header("Bow")]
     public float grabThreshold = 0.15F;
     public Transform start;
     public Transform end;
     public Transform spawnPoint;
+    public int count = 0;
 
     private Transform pullingHand;
     private Arrow currentArrow;
@@ -34,13 +36,21 @@ public class Bow : MonoBehaviour
 
     private void Update()
     {
-        if (!pullingHand || !currentArrow)
+        if (currentArrow) debug.text = "Arrows made: " + count;
+        else debug.text = "currentArrow not null";
+
+        if(pullingHand) debug2.text = "pullingHandNot null" + pullValue;
+        else debug2.text = ":(";
+        //debug3.text = "arrows: " + count;
+
+        //debug2.text = pullValue.ToString();
+        if (pullingHand && currentArrow)
         {
-            //debug.text = "broken";
-            return;
+            debug3.text = "THING";
+            pullValue = CalculatePull(pullingHand);
         }
-        pullValue = CalculatePull(pullingHand);
-        pullValue = Mathf.Clamp(pullValue, 0, 1);
+        else debug3.text = "";
+        //pullValue = Mathf.Clamp(pullValue, 0, 1);
         //set anim "Blend"
     }
 
@@ -57,12 +67,15 @@ public class Bow : MonoBehaviour
 
     private void FireArrow()
     {
+        debug2.text = "pew";
+        currentArrow.Fire(pullValue);
         currentArrow = null;
     }
 
     private IEnumerator CreateArrow(float waitTime)
     {
-        debug.text = "New arrow made";
+        count++;
+        debug.text = "Arrows made: " + count;
         yield return new WaitForSeconds(waitTime);
 
         GameObject arrowObj = Instantiate(arrowPref, spawnPoint);
@@ -73,22 +86,30 @@ public class Bow : MonoBehaviour
 
     public void Pull(Transform hand)
     {
-        debug.text = "Pulled arrow back";
+        //debug.text = "Pulled arrow back";
         float dist = Vector3.Distance(hand.position, start.position);
+        //currentArrow.transform.position = new Vector3(start.position.x, start.position.y, end.position.z);
         if (dist > grabThreshold)
         {
-            debug.text = "nope";
+            //debug.text = "nope";
             return;
+        }
+        else
+        {
+            //bowString.SetActive(false);
+            //currentArrow.transform.SetParent(end);
+            //currentArrow.transform.position = Vector3.zero;
         }
         pullingHand = hand;
     }
 
     public void Release()
     {
-        debug.text = "Shot arrow";
+        //debug.text = "Shot arrow";
         if (pullValue > 0.25F) FireArrow();
+        bowString.SetActive(true);
         pullingHand = null;
-        pullValue = 0;
+        pullValue = 0F;
         // reset anim "Blend"
 
         if(!currentArrow) StartCoroutine(CreateArrow(0.25F));
